@@ -1,4 +1,3 @@
-from curses.textpad import Textbox
 from pickle import TRUE
 from re import S
 from turtle import fillcolor
@@ -7,7 +6,7 @@ import numpy as np
 import random
 from manim_slides import Slide
 import networkx as nx
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 class intro(Slide):
@@ -45,16 +44,83 @@ class intro(Slide):
     
         self.play(Write(definition))
 
-        #CReating Graph
+        self.wait(1)
+        self.makeGraph()
 
-        vertices = [1, 2, 3]
-        edges = [(1, 2), (2, 3), (1, 3)]
-        lt = {1: [0.3, 0, 0], 2: [-2, 1.5, 0], 3: [-2, -1.5, 0]}
-        labels = "ABC"
-        label_dict = {i: label for i, label in zip(vertices, labels)}
-        g = Graph(vertices,edges,labels=label_dict,layout= lt)
-        g.shift((-3,-0.8,0))
-        self.play(Create(g))
+        #CReating Graph and MST
+    def makeGraph(self):
+        self.node_A = Dot(point=np.array([-5, -0.5, 0]))
+        self.node_B = Dot(point=np.array([-2, 0.5, 0]))
+        self.node_C = Dot(point=np.array([-2, -2.5, 0]))
+
+        self.node_grp = Group(self.node_A,self.node_B,self.node_C)
+
+        self.edge_1 = Line(self.node_grp[0],self.node_grp[1])
+        self.edge_2 = Line(self.node_grp[1],self.node_grp[2])   
+        self.edge_3 = Line(self.node_grp[0],self.node_grp[2])
+
+        self.w_label1 = Tex("5", color=WHITE, font_size=30).shift(UP * 0.25 + 3.5 * LEFT)
+        self.w_label2 = Tex("7", color=WHITE, font_size=30).shift(DOWN * 1.8 + 3.5 * LEFT)
+        self.w_label3 = Tex("11", color=WHITE, font_size=30).shift(LEFT * 1.8 + DOWN * 1)
+
+        self.Tnode1 = Tex("A", color=WHITE, font_size=30).next_to(self.node_A, LEFT)
+        self.Tnode2 = Tex("B", color=WHITE, font_size=30).next_to(self.node_B, RIGHT)
+        self.Tnode3 = Tex("C", color=WHITE, font_size=30).next_to(self.node_C, LEFT)
+
+        self.nodeGrp = Group(self.node_A,self.node_B,self.node_C)
+        self.play(FadeIn(self.nodeGrp))
+
+        self.wait(1)
+        self.play(Create(self.Tnode1), Create(self.Tnode2), Create(self.Tnode3))
+
+        self.edgeGrp = Group(self.edge_1,self.edge_2,self.edge_3)
+        self.play(FadeIn(self.edgeGrp))
         
+        self.play(Write(self.w_label1), Write(self.w_label2), Write(self.w_label3))
+
         self.wait()
+
+        #Making Middle Arrow
+        arrow_3 = Arrow(start=LEFT, end=RIGHT)
+        g2 = Group(arrow_3)
+        g2.shift((0,-0.8,0))
+        self.add(g2)
+        self.wait()
+
+        #Making MSt layout from Graph Above
+        self.node_MA = Dot(point=np.array([-5, -0.5, 0]))
+        self.node_MB = Dot(point=np.array([-2, 0.5, 0]))
+        self.node_MC = Dot(point=np.array([-2, -2.5, 0]))
         
+        self.node_MA.shift(RIGHT*7)
+        self.node_MB.shift(RIGHT*7)
+        self.node_MC.shift(RIGHT*7)
+
+        self.Mnode1 = Tex("A", color=WHITE, font_size=30).next_to(self.node_MA, LEFT)
+        self.Mnode2 = Tex("B", color=WHITE, font_size=30).next_to(self.node_MB, RIGHT)
+        self.Mnode3 = Tex("C", color=WHITE, font_size=30).next_to(self.node_MC, LEFT)
+
+        self.nodeGrp1 = Group(self.node_MA,self.node_MB,self.node_MC)
+        self.play(FadeIn(self.nodeGrp1))
+
+        self.wait(1)
+        self.play(Create(self.Mnode1), Create(self.Mnode2), Create(self.Mnode3))
+
+        #highliting the MST edges
+        edge_M1 = Line(self.node_grp[0],self.node_grp[1])
+        M_label1 = Tex("5", color=WHITE, font_size=30).shift(UP * 0.25 + 3.5 * LEFT)
+        self.play(Create(edge_M1))
+        edge_M1.set_color(color=RED)
+        self.wait(1)
+        self.play(edge_M1.animate.shift(RIGHT*7),M_label1.animate.shift(RIGHT*7))
+
+        self.wait(1)
+
+        edge_M2 = Line(self.node_grp[0],self.node_grp[2])
+        M_label2 = Tex("7", color=WHITE, font_size=30).shift(DOWN * 1.8 + 3.5 * LEFT)
+        self.play(Create(edge_M2))
+        edge_M2.set_color(color=RED)
+        self.wait(1)
+        self.play(edge_M2.animate.shift(RIGHT*7),M_label2.animate.shift(RIGHT*7))
+            
+            
