@@ -119,6 +119,13 @@ class findUnion(Slide):
         text3 = Text("Main Idea :",stroke_width = 1,color=BLUE,font_size=25).move_to([-5,1.2,0]).shift(UP * 1)
         text4 = Text("Change the Label of the Smaller tree",font_size = 25,color=WHITE).move_to([-1.3,1.15,0]).shift(UP * 1)
         self.play(Write(text3),Write(text4))
+
+        ellipse1 = Ellipse(
+            width=2, height=2.6 ,stroke_width=5
+        ).move_to(UP * -0.6 + RIGHT * 0.2)
+        self.play(FadeIn(ellipse1))
+        self.wait()
+
         self.play(FadeOut(node_4),FadeOut(node_5),FadeOut(t4),FadeOut(t5))
         node_4 = LabeledDot(Text("6",color=RED,font_size=20),point=np.array([2, 1, 0]))
         node_4.scale(0.7)
